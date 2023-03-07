@@ -1,4 +1,5 @@
 import pygame
+import tractor
 
 #pygame initialization
 pygame.init()
@@ -7,12 +8,14 @@ pygame.init()
 SCREEN = pygame.display.set_mode((1000, 1000))
 pygame.display.set_caption("Traktor_interaktor")
 
+myTractor = tractor.Tractor
+
 #screen background
 def set_screen():
         SCREEN.fill((0,100,0))
         pygame.display.update()
-    
-
+        TRACTOR = pygame.draw.rect(SCREEN, (255, 255, 255), (myTractor.x, myTractor.y, myTractor.width, myTractor.height))
+        pygame.display.update()
 
 if __name__ == "__main__":
     running = True
@@ -21,6 +24,15 @@ if __name__ == "__main__":
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+            keys = pygame.key.get_pressed()
+            if keys[pygame.K_LEFT] and myTractor.x>0:
+                 myTractor.x -= myTractor.speed
+            if keys[pygame.K_RIGHT] and myTractor.x<1000-myTractor.width:
+                 myTractor.x += myTractor.speed
+            if keys[pygame.K_UP] and myTractor.y>0:
+                 myTractor.y -= myTractor.speed
+            if keys[pygame.K_DOWN] and myTractor.y<1000-myTractor.height:
+                 myTractor.y += myTractor.speed
         set_screen()
         
     pygame.quit()
