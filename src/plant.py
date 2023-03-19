@@ -31,3 +31,4 @@ class Plant(Sprite):
             self.fertilizer="wheat_fertilizer"
             self.pic_path="assets/Wheat.png"
         
+    
