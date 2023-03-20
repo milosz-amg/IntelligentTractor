@@ -2,7 +2,7 @@ import pygame
 import sys
 import tractor
 import src.screen as screen
-import src.plant as plant
+import src.Plant as plant
 from src.Tractor import Tractor as ractor2
 #import src.tractor as tractor2
 

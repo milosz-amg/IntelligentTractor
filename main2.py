@@ -22,7 +22,6 @@ screen = pygame.display.set_mode(SIZE)
 pygame.display.set_caption("Traktor_interaktor")
 background = pygame.image.load("assets/farmland.jpg")
 background = pygame.transform.scale(background,SIZE)
-screen.fill((90,50,20))
 background.fill((90,50,20))
 
 for line in range(25):
