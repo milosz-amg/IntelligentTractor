@@ -1,10 +1,9 @@
-from pygame.sprite import Sprite
+import pygame
 
-class Plant(Sprite):
-    def __init__(self,species,location,is_ill,pic_path):
-        super.__init__()
+class Plant(pygame.sprite.Sprite):
+    def __init__(self,species,is_ill,pos_x,pos_y):
+        super().__init__()
         self.species=species
-        self.location=location
         self.is_ill=is_ill
 
         if species=="carrot":
@@ -25,9 +24,14 @@ class Plant(Sprite):
             self.fertilizer="potatoe_fertilizer"
             self.pic_path="assets/Potato.png"
 
-        elif species=="wheat":
+        else:
             self.growth_time=250
             self.weight=75
             self.fertilizer="wheat_fertilizer"
             self.pic_path="assets/Wheat.png"
+
+        self.image = pygame.image.load(self.pic_path) #zmienic
+        self.image = pygame.transform.scale(self.image,(36,36))
+        self.rect = self.image.get_rect()
+        self.rect.center = [pos_x,pos_y]
         
