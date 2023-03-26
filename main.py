@@ -9,7 +9,7 @@ from src.Plant import Plant
 # pygame initialization
 pygame.init()
 clock = pygame.time.Clock()
-pygame.mouse.set_visible(False)
+#pygame.mouse.set_visible(False)
 
 #GAME SCREEN
 screen = pygame.display.set_mode(SIZE)
@@ -25,8 +25,10 @@ for line in range(26):
             pygame.draw.line(background, (0, 0, 0), (line * 36, 0), (line * 36, SIZE[1]))
 
 #TRACTOR
-tractor = Tractor('oil','manual')
+tractor = Tractor('oil','manual', 'fuel', 'fertilizer1')
 tractor_group = pygame.sprite.Group()
+tractor.rect.x = 0
+tractor.rect.y = 0
 tractor_group.add(tractor)
 
 #PLANTS
@@ -42,13 +44,16 @@ if __name__ == "__main__":
                 running = False
                 pygame.quit()
                 sys.exit()
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                 tractor.collect(plant_group)
-            
-        pygame.display.flip()
+            if event.type == pygame.KEYDOWN:
+                if event.key==pygame.K_RETURN:
+                    tractor.collect(plant_group)
+                if event.key == pygame.K_ESCAPE:
+                    running = False
+                 
+        Tractor.movement(tractor)
         screen.blit(background,(0,0))
         plant_group.draw(screen)
         tractor_group.draw(screen)
         tractor_group.update()
+        pygame.display.flip()
         clock.tick(60)
-        
