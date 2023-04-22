@@ -29,7 +29,17 @@ class BFS:
             states = [(pos_x - block_size, pos_y, directions[270]), (pos_x, pos_y, directions[0]), (pos_x, pos_y, directions[180])]
             actions = ['F', 'L', 'R']
             
-        return states, actions
+        for s, a in zip(states, actions):
+            if self.valid_state(s):
+                options.append((a, s))
+        
+        return options
+    
+    def valid_state(self, state):
+        pos_x, pos_y, rotation = state
+        if pos_x < 0 or pos_x >= screen_width or pos_y < 0 or pos_y >= screen_width:
+            return False
+        return True
         
     def search(self):
         pass
