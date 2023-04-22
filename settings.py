@@ -12,4 +12,6 @@ road_coords = [0, 5, 10, 15, 20, 25]
 field_width = 4
 field_height = 4
 field_size = field_width*field_height
-fields_amount = 25
+fields_amount = 26
+
+directions = {0: 'UP', 90: 'RIGHT', 180: 'DOWN', 270: 'LEFT'}

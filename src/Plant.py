@@ -1,4 +1,5 @@
 import pygame
+from settings import block_size
 
 class Plant(pygame.sprite.Sprite):
     def __init__(self,species,is_ill,pos_x,pos_y):
@@ -43,7 +44,7 @@ class Plant(pygame.sprite.Sprite):
             self.pic_path="assets/Wheat.png"
 
         self.image = pygame.image.load(self.pic_path) #zmienic
-        self.image = pygame.transform.scale(self.image,(36,36))
+        self.image = pygame.transform.scale(self.image,(block_size, block_size))
         self.rect = self.image.get_rect()
         self.rect.center = [pos_x,pos_y]
         
