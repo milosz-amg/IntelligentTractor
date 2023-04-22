@@ -42,7 +42,7 @@ class BFS:
             return False
         return True
         
-    def tempfunc(self, elem):
+    def goal_path(self, elem):
         path = []
                 
         while elem.parent: 
@@ -53,34 +53,23 @@ class BFS:
         return path
 
     def search(self, istate, goaltest):
-        node = Node([istate[0], istate[1], istate[2]])
-        fringe = []
-        fringe.append(node)
-        fringe_states = [fringe[0].state]
-        
-        #fringe_state = [fringe[0].state]
-        #visited = []
-        explored_states = []
-        
+        x, y, rotation = istate
+        start_node = Node((x, y, rotation))
+
+        self.fringe.append(start_node)
+
         while True:
-            if not fringe:
+            if len(self.fringe) == 0:
                 return False
 
-            elem = fringe.pop(0)
-            temp = copy.copy(elem)
-            fringe_states.pop(0)
-            
-            # DESTINATION
+            elem = self.fringe.pop(0)
+
             if elem.state[0] == goaltest[0] and elem.state[1] == goaltest[1]:
-                return self.tempfunc(elem)
+                return self.goal_path(elem)
 
-            explored_states.append(elem.state) #elem.state(?)
+            self.explored.append(elem.state)
 
-            for (action, state) in self.successor(temp):
-                print
-                if (state not in fringe_states) and (state not in explored_states):
-                    x = Node([state[0][0], state[1], state[2]])
-                    x.parent = elem
-                    x.action = action
-                    fringe.append(x)
-                    fringe_states.append(x.state)
+            for (action, state) in self.successor(elem.state):
+                if state not in self.explored:
+                    x = Node(state, elem, action)
+                    self.fringe.append(x)
