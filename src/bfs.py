@@ -1,4 +1,5 @@
 from settings import block_size, screen_width, directions
+import copy
 
 
 class Node:
@@ -41,5 +42,45 @@ class BFS:
             return False
         return True
         
-    def search(self):
-        pass
+    def tempfunc(self, elem):
+        path = []
+                
+        while elem.parent: 
+            path.append([elem.action, elem.state[0], elem.state[1]])
+            elem = elem.parent
+
+        path = path[::-1]
+        return path
+
+    def search(self, istate, goaltest):
+        node = Node([istate[0], istate[1], istate[2]])
+        fringe = []
+        fringe.append(node)
+        fringe_states = [fringe[0].state]
+        
+        #fringe_state = [fringe[0].state]
+        #visited = []
+        explored_states = []
+        
+        while True:
+            if not fringe:
+                return False
+
+            elem = fringe.pop(0)
+            temp = copy.copy(elem)
+            fringe_states.pop(0)
+            
+            # DESTINATION
+            if elem.state[0] == goaltest[0] and elem.state[1] == goaltest[1]:
+                return self.tempfunc(elem)
+
+            explored_states.append(elem.state) #elem.state(?)
+
+            for (action, state) in self.successor(temp):
+                print
+                if (state not in fringe_states) and (state not in explored_states):
+                    x = Node([state[0][0], state[1], state[2]])
+                    x.parent = elem
+                    x.action = action
+                    fringe.append(x)
+                    fringe_states.append(x.state)
