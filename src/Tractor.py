@@ -36,7 +36,7 @@ class Tractor(pygame.sprite.Sprite):
             self.movement('F')
         
         #waits between moves to avoid moving to fast
-        pygame.time.wait(100) 
+        pygame.time.wait(30) 
     
     def move_forward(self):
         if self.rect.y > 0 and self.rotation == 0:

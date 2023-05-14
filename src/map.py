@@ -3,7 +3,32 @@ import pygame
 from settings import screen_height, screen_width, SIZE, SPECIES, block_size, tile, road_coords, fields_amount, field_size, field_height, field_width
 from src.Plant import Plant
 import random
+from src.Field import Field
 
+
+def get_type_by_position(fields, x, y):
+    for field in fields:
+        if field.x == x and field.y == y:
+            return field.plant_type
+    return None
+
+def get_cost_by_type(plant_type):
+    #plant_type == None, when field is empty.
+    if plant_type == None: 
+        return 200
+    elif plant_type == 'carrot':
+        return 300
+    elif plant_type == 'potato':
+        return 500
+    elif plant_type == 'beetroot':
+        return 500
+    elif plant_type == 'wheat':
+        return 1000
+    #else, means that field is type of road.
+    else:
+        return 100
+
+fields = pygame.sprite.Group()
 
 def drawRoads(screen):
     #drawing roads:
@@ -12,9 +37,11 @@ def drawRoads(screen):
     for x in road_coords:
         for block in range(26):
             screen.blit(road, (x*block_size, block * 36))
+            fields.add(Field('road', x*block_size, block * 36, None, get_cost_by_type('road'), None, None, None, None, 'road', None, None))
     for y in road_coords:
         for block in range(26):
             screen.blit(road, (block * 36, y*block_size))
+            fields.add(Field('road', block * 36, y*block_size, None, get_cost_by_type('road'), None, None, None, None, 'road', None, None))
 
     barn_img = pygame.image.load('assets/barn.png')
     barn = pygame.transform.scale(barn_img, tile)
@@ -33,7 +60,11 @@ def seedForFirstTime():
             new_plant = Plant(plant,0, x, y)
             blocks_seeded_in_field = blocks_seeded_in_field + 1
             plant_group.add(new_plant)
+            fields.add(Field('field', x-18, y-18, None, get_cost_by_type(plant), None, None, None, None, plant, None, None))
     return plant_group
+
+def return_fields_list():
+    return fields
 
 
 # to-be-done with minecraft farmland graphic xD

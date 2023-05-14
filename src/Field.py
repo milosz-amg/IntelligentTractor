@@ -1,13 +1,13 @@
 from pygame.sprite import Sprite   
 
 class Field(Sprite):    
-    def __init__(self, type, row_id, col_id, image, cost, hydration_level , soil,
+    def __init__(self, type, x, y, image, cost, hydration_level , soil,
                  fertilizer_degree, development_degree, plant_type, fertilizer_type, to_water):
-    
+        super().__init__()
         self.type = type
-        self.row_id = row_id
-        self.col_id = col_id
-        self.position = (row_id, col_id)
+        self.x = x
+        self.y = y
+        self.position = (x, y)
         self.image = image
         self.cost = cost
 

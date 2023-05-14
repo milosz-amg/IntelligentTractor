@@ -2,10 +2,10 @@ import pygame
 import sys
 import random
 from settings import screen_height, screen_width, SIZE, SPECIES, block_size, tile, road_coords, directions
-from src.map import drawRoads, seedForFirstTime
+from src.map import drawRoads, seedForFirstTime, return_fields_list
 from src.Tractor import Tractor
 from src.Plant import Plant
-from src.bfs import BFS
+from src.bfs import Astar
 
 # pygame initialization
 pygame.init()
@@ -33,20 +33,22 @@ tractor_group.add(tractor)
 #PLANTS
 plant_group = pygame.sprite.Group()
 plant_group = seedForFirstTime()
+fields = return_fields_list()
 
 #
 tractor_move = pygame.USEREVENT + 1
 pygame.time.set_timer(tractor_move, 800)
 moves = []
-goal_bfs = BFS()
+goal_astar = Astar()
 destination = (random.randrange(0, 936, 36), random.randrange(0, 900, 36))
 print("Destination: ", destination)
-moves = goal_bfs.search(
+moves = goal_astar.search(
     [tractor.rect.x, tractor.rect.y, directions[tractor.rotation]], destination)
 
 
+
 if __name__ == "__main__":
-    running = True
+    running = True  
 
     while running:
         for event in pygame.event.get():
@@ -61,7 +63,9 @@ if __name__ == "__main__":
                     running = False
             if event.type == tractor_move:
                 if len(moves) != 0:
-                    step = moves.pop()
+                    moves_list = list(moves)  # convert to list
+                    step = moves_list.pop()  # pop the last element
+                    moves = tuple(moves_list)  # convert back to tuple
                     tractor.movement(step[0])
                     
 
