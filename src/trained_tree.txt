@@ -1,0 +1,7 @@
+|--- czy_roslina_robaczywa <= 0.50
+|   |--- class: 0
+|--- czy_roslina_robaczywa >  0.50
+|   |--- dni_od_nawiezienia <= 9.50
+|   |   |--- class: 0
+|   |--- dni_od_nawiezienia >  9.50
+|   |   |--- class: 1
