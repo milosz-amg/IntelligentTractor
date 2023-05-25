@@ -7,6 +7,8 @@ from src.Tractor import Tractor
 from src.Plant import Plant
 from src.bfs import Astar
 from src.Field import Field
+import pickle
+import os
 
 
 # pygame initialization
@@ -37,6 +39,9 @@ plant_group = pygame.sprite.Group()
 plant_group = seedForFirstTime()
 fields = return_fields_list()
 
+#ID3 TREE
+tree = pickle.load(open(os.path.join('src','tree.plk'),'rb'))
+
 #
 tractor_move = pygame.USEREVENT + 1
 pygame.time.set_timer(tractor_move, 800)
@@ -50,6 +55,7 @@ mx=int((mx+18)/36)
 my=int((my+18)/36)
 print("Destination: ", mx,my)
 tmp = WORLD_MATRIX[mx][my]
+print(tmp)
 
 moves = goal_astar.search(
     [tractor.rect.x, tractor.rect.y, directions[tractor.rotation]], destination)

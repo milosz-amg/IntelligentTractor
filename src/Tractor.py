@@ -1,6 +1,9 @@
 import pygame
 from settings import block_size, tile
 
+mx=0
+my=0
+
 class Tractor(pygame.sprite.Sprite):
     def __init__(self, engine, transmission, fuel, fertilizer, capacity):
         super().__init__()
@@ -24,6 +27,8 @@ class Tractor(pygame.sprite.Sprite):
         self.transmission = transmission
         self.fuel = fuel
         self.fertilizer = fertilizer
+        
+        
 
     def movement_using_keys(self):
         keys = pygame.key.get_pressed()
@@ -47,6 +52,7 @@ class Tractor(pygame.sprite.Sprite):
             self.rect.y += block_size
         if self.rect.x > 0 and self.rotation == 270:
             self.rect.x -= block_size
+        
     
     def move_left(self):
         self.rotation -= 90
@@ -69,6 +75,7 @@ class Tractor(pygame.sprite.Sprite):
             self.image = self.left
             
     def movement(self, direction):
+        print(int((self.rect.x-18)/36),';',int((self.rect.y-18)/36))
         if direction == 'F':
             self.move_forward()
         elif direction == 'L':
