@@ -1,10 +1,13 @@
 from cmath import sqrt
 
 
-screen_width=1200#936
-screen_height=1000#936
+screen_width=1200
+#screen_width=936
+# screen_height=1000
+screen_height=936
 SIZE = (screen_width, screen_height)
 SPECIES=["carrot","potato","beetroot","wheat"]
+WEATHER=['slonce','wiatr','snieg','deszcz']
 # size in pixels of one tile = 36px/36px
 tile = (36, 36)
 block_size = 36

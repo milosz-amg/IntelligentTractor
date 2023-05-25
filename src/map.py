@@ -33,7 +33,7 @@ def get_cost_by_type(plant_type):
 fields = pygame.sprite.Group()
 
  
-world_matrix = [[0 for _ in range(fields_amount+1)] for _ in range(fields_amount+1)]
+WORLD_MATRIX = [[0 for _ in range(fields_amount+1)] for _ in range(fields_amount+1)]
 
 def drawRoads(screen):
     #drawing roads:
@@ -42,15 +42,15 @@ def drawRoads(screen):
     for x in road_coords:
         for block in range(int(fields_amount)+1):
             screen.blit(road, (x*block_size, block * 36))
-            tmp_field=Field('road', x*block_size, block * 36, None, get_cost_by_type('road'), None, None, None, None, 'road', None, None)
+            tmp_field=Field('road', x*block_size, block * 36, None, get_cost_by_type('road'), None, None, None, None, 'road', None, None,plantObj=None)
             fields.add(tmp_field)
-            world_matrix[x][block]=Road(x,block)
+            WORLD_MATRIX[x][block]=Road(x,block)
     for y in road_coords:
         for block in range(int(fields_amount)+1):
             screen.blit(road, (block * block_size, y*block_size))
-            tmp_field=Field('road', block * block_size, y*block_size, None, get_cost_by_type('road'), None, None, None, None, 'road', None, None)
+            tmp_field=Field('road', block * block_size, y*block_size, None, get_cost_by_type('road'), None, None, None, None, 'road', None, None,plantObj=None)
             fields.add(tmp_field)
-            world_matrix[block][y]=Road(block,y)
+            WORLD_MATRIX[block][y]=Road(block,y)
 
 
     barn_img = pygame.image.load('assets/barn.png')
@@ -68,21 +68,29 @@ def seedForFirstTime():
 
             x = (((field%5)*((block_size*(field_width+1)))) + ((blocks_seeded_in_field % field_width)*block_size) + ((3/2)*block_size))
             y = ((int(field/5)*((block_size*(field_width+1)))) + ((int(blocks_seeded_in_field/field_height))*block_size) + ((3/2)*block_size))
+            # wzrost;wilgotnosc;dni_od_nawiezienia;aktualna_pogoda;czy_roslina_robaczywa;typ_rosliny;pojemnosc_ekwipunku;cena_sprzedarzy;czy_zebrac
             
-            new_plant = Plant(plant_name,0, x, y)
+            new_plant = Plant(
+                    wzrost=random.randint(0, 100),
+                    wilgotnosc=random.randint(0, 100),
+                    dni_od_nawiezienia=random.randint(0, 31),
+                    aktualna_pogoda='_',
+                    czy_robaczywa=random.randint(0, 1),
+                    cena_sprzedarzy=random.randint(500, 2000),
+                    species=plant_name,
+                    pos_x=x,
+                    pos_y=y)
             blocks_seeded_in_field = blocks_seeded_in_field + 1
             plant_group.add(new_plant)
-            tmp_field_plant = Field('field', x-18, y-18, None, get_cost_by_type(plant_name), None, None, None, None, plant_name, None, None)
+            tmp_field_plant = Field('field', x-18, y-18, None, get_cost_by_type(plant_name), None, None, None, None, plant_name, None, None, plantObj=new_plant)
             fields.add(tmp_field_plant)
 
             mx = int((x-18)/36)
             my = int((y-18)/36)
-            world_matrix[mx][my]=tmp_field_plant
+            WORLD_MATRIX[mx][my]=tmp_field_plant
 
-            # for i in range(1,4):
-            #     world_matrix[mx][my+i]=tmp_field_plant
     #debug
-    print(world_matrix)
+    # print(WORLD_MATRIX)
     #end of debug
 
     return plant_group
