@@ -1,8 +1,12 @@
 import pygame
 from settings import block_size, tile
+import pickle
+from sklearn import tree
 
 mx=0
 my=0
+
+
 
 class Tractor(pygame.sprite.Sprite):
     def __init__(self, engine, transmission, fuel, fertilizer, capacity):
@@ -22,12 +26,19 @@ class Tractor(pygame.sprite.Sprite):
         self.rotation = 90
 
         self.collected = 0
-        self.capacity = capacity
         self.engine = engine
         self.transmission = transmission
-        self.fuel = fuel
         self.fertilizer = fertilizer
-        
+        self.capacity = capacity
+        self.fuel = fuel
+
+
+
+    def setFuel(self,fuelLevel):
+        self.fuel=fuelLevel
+
+    def setCapacity(self, newCapacity):
+        self.capacity = newCapacity    
         
 
     def movement_using_keys(self):
@@ -75,7 +86,7 @@ class Tractor(pygame.sprite.Sprite):
             self.image = self.left
             
     def movement(self, direction):
-        print(int((self.rect.x-18)/36),';',int((self.rect.y-18)/36))
+        # print(int((self.rect.x-18)/36),';',int((self.rect.y-18)/36))
         if direction == 'F':
             self.move_forward()
         elif direction == 'L':
@@ -107,4 +118,8 @@ class Tractor(pygame.sprite.Sprite):
         
     def find_nearest_plant(self, plant_group):
         self.plant_group = plant_group
+
+    def getLocation(self):
+        return [self.rect.x, self.rect.y]
+    
         

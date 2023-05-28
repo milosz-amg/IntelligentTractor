@@ -61,5 +61,5 @@ class Plant(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = [pos_x,pos_y]
 
-def getParameters(self):
-    return [self.species, self.wzrost, self.wilgotnosc, self.dni_od_nawiezienia,self.aktualna_pogoda,self.czy_robaczywa,self.cena_sprzedarzy]
+    def getParameters(self):
+        return [self.wzrost, self.wilgotnosc, self.dni_od_nawiezienia,self.aktualna_pogoda,self.czy_robaczywa,self.cena_sprzedarzy]

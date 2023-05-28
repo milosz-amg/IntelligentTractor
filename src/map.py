@@ -42,15 +42,17 @@ def drawRoads(screen):
     for x in road_coords:
         for block in range(int(fields_amount)+1):
             screen.blit(road, (x*block_size, block * 36))
-            tmp_field=Field('road', x*block_size, block * 36, None, get_cost_by_type('road'), None, None, None, None, 'road', None, None,plantObj=None)
+            new_road = Road(x,block)
+            tmp_field=Field('road', x*block_size, block * 36, None, get_cost_by_type('road'), None, None, None, None, 'road', None, None,contain=new_road)
             fields.add(tmp_field)
-            WORLD_MATRIX[x][block]=Road(x,block)
+            WORLD_MATRIX[x][block]=tmp_field
     for y in road_coords:
         for block in range(int(fields_amount)+1):
             screen.blit(road, (block * block_size, y*block_size))
-            tmp_field=Field('road', block * block_size, y*block_size, None, get_cost_by_type('road'), None, None, None, None, 'road', None, None,plantObj=None)
+            new_road = Road(block,y)
+            tmp_field=Field('road', block * block_size, y*block_size, None, get_cost_by_type('road'), None, None, None, None, 'road', None, None,contain=new_road)
             fields.add(tmp_field)
-            WORLD_MATRIX[block][y]=Road(block,y)
+            WORLD_MATRIX[block][y]=tmp_field
 
 
     barn_img = pygame.image.load('assets/barn.png')
@@ -74,7 +76,7 @@ def seedForFirstTime():
                     wzrost=random.randint(0, 100),
                     wilgotnosc=random.randint(0, 100),
                     dni_od_nawiezienia=random.randint(0, 31),
-                    aktualna_pogoda='_',
+                    aktualna_pogoda=random.randint(1,4),
                     czy_robaczywa=random.randint(0, 1),
                     cena_sprzedarzy=random.randint(500, 2000),
                     species=plant_name,
@@ -82,7 +84,7 @@ def seedForFirstTime():
                     pos_y=y)
             blocks_seeded_in_field = blocks_seeded_in_field + 1
             plant_group.add(new_plant)
-            tmp_field_plant = Field('field', x-18, y-18, None, get_cost_by_type(plant_name), None, None, None, None, plant_name, None, None, plantObj=new_plant)
+            tmp_field_plant = Field('field', x-18, y-18, None, get_cost_by_type(plant_name), None, None, None, None, plant_name, None, None, contain=new_plant)
             fields.add(tmp_field_plant)
 
             mx = int((x-18)/36)

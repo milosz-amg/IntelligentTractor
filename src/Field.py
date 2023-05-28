@@ -3,7 +3,7 @@ from src.Plant import Plant
 
 class Field(Sprite):    
     def __init__(self, type, x, y, image, cost, hydration_level , soil,
-                 fertilizer_degree, development_degree, plant_type, fertilizer_type, to_water, plantObj):
+                 fertilizer_degree, development_degree, plant_type, fertilizer_type, to_water, contain):
         super().__init__()
         self.type = type
         self.x = x
@@ -19,11 +19,12 @@ class Field(Sprite):
         self.plant_type = plant_type
         self.fertilizer_type = fertilizer_type
         self.to_water = to_water
-        self.plantObj = plantObj
+        self.contain = contain
 
-    def getPlantObj(self):
-        return self.plantObj
+    def getContain(self):
+        return self.contain
 
-    def setPlantObj(self,newPlant):
-        self.plantObj=newPlant
+    def setContain(self,newPlant):
+        self.contain=newPlant
+
 
