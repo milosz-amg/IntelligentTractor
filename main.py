@@ -58,8 +58,7 @@ mx=int((mx+18)/36)
 my=int((my+18)/36)
 print("Destination: ", mx,my)
 
-#POBIERZ MATRIXA OBJEKT FILD, Z FIELD POBIERZ PLANT, Z PLANTA PARAMETRY, WYWOŁAJ DECYCJNOSC
-#ID3 TREE
+#ID3 TREE LOADING
 dtree = pickle.load(open(os.path.join('src','tree.plk'),'rb'))
      
 # pobierz dane o polu field i czy ma na sobie roslinke, zadecyduj czy zebrac
@@ -68,6 +67,7 @@ this_contain = Field.getContain(this_field)
 if isinstance(this_contain, Plant): 
      this_plant = this_contain
      params=Plant.getParameters(this_plant)
+     #ID3 decision
      decision=make_decision(params[0],params[1],params[2],params[3],params[4],tractor.fuel,tractor.capacity,params[5],dtree)
      print('wzorst',params[0],'wilgotnosc',params[1],'dni_od_nawiezienia',params[2],'pogoda',params[3],'zdrowa',params[4],'paliwo',tractor.fuel,'pojemnosc eq',tractor.capacity,'cena sprzedazy',params[5])
      print(decision)
