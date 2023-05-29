@@ -1,8 +1,8 @@
 from cmath import sqrt
 
 
-screen_width=1200
-#screen_width=936
+# screen_width=1200
+screen_width=936
 # screen_height=1000
 screen_height=936
 SIZE = (screen_width, screen_height)
