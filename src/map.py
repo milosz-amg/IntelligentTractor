@@ -73,11 +73,11 @@ def seedForFirstTime():
             # wzrost;wilgotnosc;dni_od_nawiezienia;aktualna_pogoda;czy_roslina_robaczywa;typ_rosliny;pojemnosc_ekwipunku;cena_sprzedarzy;czy_zebrac
             
             new_plant = Plant(
-                    wzrost=random.randint(20, 100),
+                    wzrost=random.randint(90, 100),
                     wilgotnosc=random.randint(0, 100),
                     dni_od_nawiezienia=random.randint(0, 31),
                     aktualna_pogoda=random.randint(1,4),
-                    czy_robaczywa=random.randint(0, 1),
+                    czy_robaczywa=0,
                     cena_sprzedarzy=random.randint(1000, 2000),
                     species=plant_name,
                     pos_x=x,

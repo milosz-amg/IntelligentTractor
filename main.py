@@ -73,9 +73,10 @@ if isinstance(this_contain, Plant):
      print(decision)
      if decision == 1:
         #   Tractor.collect(self=tractor, plant_group=plant_group)
-          print('Gotowe do zbioru')
+        print('Gotowe do zbioru')
      else:
-          print('nie zbieramy')
+        # decision = 1
+        print('nie zbieramy')
      
 else:
      print('Road, no plant growing')
@@ -106,6 +107,8 @@ if __name__ == "__main__":
                     step = moves_list.pop()  # pop the last element
                     moves = tuple(moves_list)  # convert back to tuple
                     tractor.movement(step[0])
+                    if (tractor.rect.x, tractor.rect.y) == destination and decision == 1:
+                        tractor.collect(plant_group)
                     
 
         Tractor.movement_using_keys(tractor)
