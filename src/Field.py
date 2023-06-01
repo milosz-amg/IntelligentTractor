@@ -1,8 +1,9 @@
 from pygame.sprite import Sprite   
+from src.Plant import Plant
 
 class Field(Sprite):    
     def __init__(self, type, x, y, image, cost, hydration_level , soil,
-                 fertilizer_degree, development_degree, plant_type, fertilizer_type, to_water):
+                 fertilizer_degree, development_degree, plant_type, fertilizer_type, to_water, contain):
         super().__init__()
         self.type = type
         self.x = x
@@ -18,4 +19,12 @@ class Field(Sprite):
         self.plant_type = plant_type
         self.fertilizer_type = fertilizer_type
         self.to_water = to_water
+        self.contain = contain
+
+    def getContain(self):
+        return self.contain
+
+    def setContain(self,newPlant):
+        self.contain=newPlant
+
 

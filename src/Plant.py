@@ -2,11 +2,24 @@ import pygame
 from settings import block_size
 
 class Plant(pygame.sprite.Sprite):
-    def __init__(self,species,is_ill,pos_x,pos_y):
+    def __init__(self,wzrost,
+                    wilgotnosc,
+                    dni_od_nawiezienia,
+                    aktualna_pogoda,
+                    czy_robaczywa,
+                    cena_sprzedarzy,
+                    species,
+                    pos_x,
+                    pos_y):
+        
         super().__init__()
         self.species=species
-        self.is_ill=is_ill
-
+        self.wzrost=wzrost
+        self.wilgotnosc=wilgotnosc
+        self.dni_od_nawiezienia=dni_od_nawiezienia
+        self.aktualna_pogoda=aktualna_pogoda
+        self.czy_robaczywa=czy_robaczywa
+        self.cena_sprzedarzy=cena_sprzedarzy
         if species=="carrot":
             self.growth_time=100
             self.weight=50
@@ -47,4 +60,6 @@ class Plant(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(self.image,(block_size, block_size))
         self.rect = self.image.get_rect()
         self.rect.center = [pos_x,pos_y]
-        
+
+    def getParameters(self):
+        return [self.wzrost, self.wilgotnosc, self.dni_od_nawiezienia,self.aktualna_pogoda,self.czy_robaczywa,self.cena_sprzedarzy]
