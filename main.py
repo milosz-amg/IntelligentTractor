@@ -11,11 +11,11 @@ import pickle
 import os
 from src.ID3 import make_decision
 import torch
-import cnn_model
+import neural_networks
 
 def recognize_plants(plants_array):
     checkpoint = torch.load(f'plants.model')
-    model = cnn_model.Net(num_classes=3)
+    model = neural_networks.Net(num_classes=3)
     model.load_state_dict(checkpoint)
     model.eval()
     img = ''
@@ -29,15 +29,15 @@ def recognize_plants(plants_array):
             for j in range(11):
                 if plants_array[j][i] == 'carrot':
                     img = 'assets/learning/test/carrot/' + str(random.randint(1, 200)) + '.jpg'
-                    pred = cnn_model.prediction(img, model)
+                    pred = neural_networks.prediction(img, model)
                     #show_plant_img(img)
                 elif plants_array[j][i] == 'potato':
                     img = 'assets/learning/test/potato/' + str(random.randint(1, 200)) + '.jpg'
-                    pred = cnn_model.prediction(img, model)
+                    pred = neural_networks.prediction(img, model)
                     # show_plant_img(img)
                 elif plants_array[j][i] == 'wheat':
                     img = 'assets/learning/test/wheat/' + str(random.randint(1, 200)) + '.jpg'
-                    pred = cnn_model.prediction(img, model)
+                    pred = neural_networks.prediction(img, model)
                     # show_plant_img(img)
                 else:
                     pred = 'none'
@@ -50,15 +50,15 @@ def recognize_plants(plants_array):
             for j in range(10,-1,-1):
                 if plants_array[j][i] == 'carrot':
                     img = 'assets/learning/test/carrot/' + str(random.randint(1, 200)) + '.jpg'
-                    pred = cnn_model.prediction(img, model)
+                    pred = neural_networks.prediction(img, model)
                     # show_plant_img(img)
                 elif plants_array[j][i] == 'potato':
                     img = 'assets/learning/test/potato/' + str(random.randint(1, 200)) + '.jpg'
-                    pred = cnn_model.prediction(img, model)
+                    pred = neural_networks.prediction(img, model)
                     # show_plant_img(img)
                 elif plants_array[j][i] == 'wheat':
                     img = 'assets/learning/test/wheat/' + str(random.randint(1, 200)) + '.jpg'
-                    pred = cnn_model.prediction(img, model)
+                    pred = neural_networks.prediction(img, model)
                     # show_plant_img(img)
                 else:
                     pred = 'none'
