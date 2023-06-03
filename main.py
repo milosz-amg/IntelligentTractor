@@ -64,22 +64,23 @@ dtree = pickle.load(open(os.path.join('src','tree.plk'),'rb'))
 # pobierz dane o polu field i czy ma na sobie roslinke, zadecyduj czy zebrac
 this_field = WORLD_MATRIX[mx][my]
 this_contain = Field.getContain(this_field)
-if isinstance(this_contain, Plant): 
-     this_plant = this_contain
-     params=Plant.getParameters(this_plant)
-     #ID3 decision
-     decision=make_decision(params[0],params[1],params[2],params[3],params[4],tractor.fuel,tractor.capacity,params[5],dtree)
-     print('wzorst',params[0],'wilgotnosc',params[1],'dni_od_nawiezienia',params[2],'pogoda',params[3],'zdrowa',params[4],'paliwo',tractor.fuel,'pojemnosc eq',tractor.capacity,'cena sprzedazy',params[5])
-     print(decision)
-     if decision == 1:
-        #   Tractor.collect(self=tractor, plant_group=plant_group)
-        print('Gotowe do zbioru')
-     else:
-        # decision = 1
-        print('nie zbieramy')
-     
-else:
-     print('Road, no plant growing')
+def action(this_contain):
+    if isinstance(this_contain, Plant): 
+        this_plant = this_contain
+        params=Plant.getParameters(this_plant)
+        #ID3 decision
+        decision=make_decision(params[0],params[1],params[2],params[3],params[4],tractor.fuel,tractor.capacity,params[5],dtree)
+        print('wzorst',params[0],'wilgotnosc',params[1],'dni_od_nawiezienia',params[2],'pogoda',params[3],'zdrowa',params[4],'paliwo',tractor.fuel,'pojemnosc eq',tractor.capacity,'cena sprzedazy',params[5])
+        print(decision)
+        if decision == 1:
+            print('Gotowe do zbioru')
+            return 1
+        else:
+            print('nie zbieramy')
+            return 0
+    else:
+        print('Road, no plant growing')
+        return 0
 
 
 moves = goal_astar.search(
@@ -107,8 +108,13 @@ if __name__ == "__main__":
                     step = moves_list.pop()  # pop the last element
                     moves = tuple(moves_list)  # convert back to tuple
                     tractor.movement(step[0])
-                    if (tractor.rect.x, tractor.rect.y) == destination and decision == 1:
+                    if (tractor.rect.x, tractor.rect.y) == destination and action == 1:
                         tractor.collect(plant_group)
+                else:
+                    tractor.rect.x = mx
+                    tractor.rect.y = my
+                    moves = goal_astar.search(
+                        [tractor.rect.x, tractor.rect.y, directions[tractor.rotation]], destination)
                     
 
         Tractor.movement_using_keys(tractor)
