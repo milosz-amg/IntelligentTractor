@@ -72,3 +72,32 @@ def test(dataloader, model, loss_fn):
     accuracy = 100.0 * correct / size
     print(f"Test Error:\n Accuracy: {accuracy:.1f}%, Avg loss: {test_loss:.8f}\n")
 
+def predict(img_path, model):
+    image = Image.open(img_path).convert('RGB')
+    image_tensor = transformer(image).unsqueeze(0).to(device)
+    output = model(image_tensor)
+    _, predicted_idx = torch.max(output, 1)
+    pred = classes[predicted_idx.item()]
+    return pred
+
+def learn():
+    num_epochs = 50
+    batch_size = 64
+
+    train_dataset = torchvision.datasets.ImageFolder(train_path, transform=transformer)
+    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
+
+    test_dataset = torchvision.datasets.ImageFolder(test_path, transform=transformer)
+    test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=True)
+
+    model = Net(len(classes)).to(device)
+    optimizer = Adam(model.parameters(), lr=1e-3, weight_decay=0.0001)
+    loss_fn = nn.CrossEntropyLoss()
+
+    for epoch in range(num_epochs):
+        print(f"Epoch {epoch + 1}\n-------------------------------")
+        train(train_loader, model, optimizer, loss_fn)
+        test(test_loader, model, loss_fn)
+
+    print("Done!")
+    torch.save(model.state_dict(), 'plants2.model')

@@ -2,7 +2,7 @@ import pygame
 import sys
 import random
 from settings import screen_height, screen_width, SIZE, SPECIES, block_size, tile, road_coords, directions
-from src.map import drawRoads, seedForFirstTime, return_fields_list, WORLD_MATRIX
+from src.map import drawRoads, seedForFirstTime, return_fields_list, WORLD_MATRIX, get_type_by_position
 from src.Tractor import Tractor
 from src.bfs import Astar
 from src.Plant import Plant
@@ -11,79 +11,38 @@ import pickle
 import os
 from src.ID3 import make_decision
 import torch
-import neural_networks
+import src.neural_networks as neural_networks
 
-def recognize_plants(plants_array):
-    checkpoint = torch.load(f'plants.model')
+def show_plant_img(img):
+    image = pygame.image.load(img)
+    image = pygame.transform.scale(image, (360, 360))
+    screen.blit(image, (972, 288))
+    pygame.display.update()
+    pygame.time.delay(1000)
+
+# neural_networks.learn()
+
+def recognize_plants(fields, destination):
+    checkpoint = torch.load(f'plants2.model')
     model = neural_networks.Net(num_classes=3)
     model.load_state_dict(checkpoint)
     model.eval()
     img = ''
-    b=0
-    j=0
-    field_array_small = []
-    field_array_big = []
-    for i in range(11):
-        field_array_small = []
-        if b == 0:
-            for j in range(11):
-                if plants_array[j][i] == 'carrot':
-                    img = 'assets/learning/test/carrot/' + str(random.randint(1, 200)) + '.jpg'
-                    pred = neural_networks.prediction(img, model)
-                    #show_plant_img(img)
-                elif plants_array[j][i] == 'potato':
-                    img = 'assets/learning/test/potato/' + str(random.randint(1, 200)) + '.jpg'
-                    pred = neural_networks.prediction(img, model)
-                    # show_plant_img(img)
-                elif plants_array[j][i] == 'wheat':
-                    img = 'assets/learning/test/wheat/' + str(random.randint(1, 200)) + '.jpg'
-                    pred = neural_networks.prediction(img, model)
-                    # show_plant_img(img)
-                else:
-                    pred = 'none'
-                field_array_small.append(pred)
-                print(i,',', j,'-',pred)
-                # agent_movement(['f'], agent, fields_for_movement, fields_for_astar)
-            # agent_movement(['r','f','r'], agent, fields_for_movement, fields_for_astar)
-            field_array_big.append(field_array_small)
-        else:
-            for j in range(10,-1,-1):
-                if plants_array[j][i] == 'carrot':
-                    img = 'assets/learning/test/carrot/' + str(random.randint(1, 200)) + '.jpg'
-                    pred = neural_networks.prediction(img, model)
-                    # show_plant_img(img)
-                elif plants_array[j][i] == 'potato':
-                    img = 'assets/learning/test/potato/' + str(random.randint(1, 200)) + '.jpg'
-                    pred = neural_networks.prediction(img, model)
-                    # show_plant_img(img)
-                elif plants_array[j][i] == 'wheat':
-                    img = 'assets/learning/test/wheat/' + str(random.randint(1, 200)) + '.jpg'
-                    pred = neural_networks.prediction(img, model)
-                    # show_plant_img(img)
-                else:
-                    pred = 'none'
-                field_array_small.append(pred)
-                print(i,',', j,'-',pred)
-                # agent_movement(['f'], agent, fields_for_movement, fields_for_astar)
-            field_array_small = field_array_small[::-1]
-            field_array_big.append(field_array_small)
-            # agent_movement(['l','f','l'], agent, fields_for_movement, fields_for_astar)
-        if b==0:
-            b=1
-        else:
-            b=0
-    correct = 0
-    incorrect = 0
-    for i in range(11):
-        for j in range(11):
-            if plants_array[i][j]=='none':
-                continue
-            else:
-                if plants_array[i][j]==field_array_big[j][i]:
-                    correct+=1
-                else:
-                    incorrect+=1
-    print("Accuracy: ",correct/(correct+incorrect)*100,'%')
+    if get_type_by_position(fields, destination[0], destination[1]) == 'carrot':
+        img = 'assets/learning/test/carrot/' + str(random.randint(1, 200)) + '.jpg'
+        pred = neural_networks.predict(img, model)
+        show_plant_img(img)
+    elif get_type_by_position(fields, destination[0], destination[1]) == 'potato':
+        img = 'assets/learning/test/potato/' + str(random.randint(1, 200)) + '.jpg'
+        pred = neural_networks.predict(img, model)
+        show_plant_img(img)
+    elif get_type_by_position(fields, destination[0], destination[1]) == 'wheat':
+        img = 'assets/learning/test/wheat/' + str(random.randint(1, 200)) + '.jpg'
+        pred = neural_networks.predict(img, model)
+        show_plant_img(img)
+    else:
+        pred = 'none'
+    print(pred)
 
 
 
@@ -102,8 +61,13 @@ background.fill((90,50,20))
 background = drawRoads(background)
 
 for line in range(26):
-            pygame.draw.line(background, (0, 0, 0), (0, line * block_size), (screen_width, line * block_size))
-            pygame.draw.line(background, (0, 0, 0), (line * block_size, 0), (line * block_size, screen_height))
+    pygame.draw.line(background, (0, 0, 0), (0, line * block_size), (936, line * block_size))
+    pygame.draw.line(background, (0, 0, 0), (line * block_size, 0), (line * block_size, screen_height))
+    
+pygame.draw.line(background, (0, 0, 0), (968, 285), (1336 , 285))
+pygame.draw.line(background, (0, 0, 0), (968, 649), (1336 , 649))
+pygame.draw.line(background, (0, 0, 0), (968, 285), (968, 649))
+pygame.draw.line(background, (0, 0, 0), (1336, 285), (1336, 649))
 
 #TRACTOR
 tractor = Tractor('oil','manual', 'fuel', 'fertilizer1', 20)
@@ -122,7 +86,7 @@ fields = return_fields_list()
 
 #
 tractor_move = pygame.USEREVENT + 1
-pygame.time.set_timer(tractor_move, 800)
+pygame.time.set_timer(tractor_move, 200)
 moves = []
 goal_astar = Astar()
 mx=random.randrange(0, 936, 36)
@@ -139,14 +103,16 @@ dtree = pickle.load(open(os.path.join('src','tree.plk'),'rb'))
 # pobierz dane o polu field i czy ma na sobie roslinke, zadecyduj czy zebrac
 this_field = WORLD_MATRIX[mx][my]
 this_contain = Field.getContain(this_field)
+
 def action(this_contain):
     if isinstance(this_contain, Plant): 
         this_plant = this_contain
         params=Plant.getParameters(this_plant)
+        # print(this_field)
         #ID3 decision
         decision=make_decision(params[0],params[1],params[2],params[3],params[4],tractor.fuel,tractor.capacity,params[5],dtree)
-        print('wzorst',params[0],'wilgotnosc',params[1],'dni_od_nawiezienia',params[2],'pogoda',params[3],'zdrowa',params[4],'paliwo',tractor.fuel,'pojemnosc eq',tractor.capacity,'cena sprzedazy',params[5])
-        print(decision)
+        # print('wzorst',params[0],'wilgotnosc',params[1],'dni_od_nawiezienia',params[2],'pogoda',params[3],'zdrowa',params[4],'paliwo',tractor.fuel,'pojemnosc eq',tractor.capacity,'cena sprzedazy',params[5])
+        # print(decision)
         if decision == 1:
             print('Gotowe do zbioru')
             return 1
@@ -161,6 +127,7 @@ def action(this_contain):
 moves = goal_astar.search(
     [tractor.rect.x, tractor.rect.y, directions[tractor.rotation]], destination)
 
+expected_plant = get_type_by_position(fields, destination[0], destination[1])
 
 
 if __name__ == "__main__":
@@ -175,6 +142,7 @@ if __name__ == "__main__":
             if event.type == pygame.KEYDOWN:
                 if event.key==pygame.K_RETURN:
                     tractor.collect(plant_group)
+                    recognize_plants(fields, destination)
                 if event.key == pygame.K_ESCAPE:
                     running = False
             if event.type == tractor_move:
@@ -183,8 +151,10 @@ if __name__ == "__main__":
                     step = moves_list.pop()  # pop the last element
                     moves = tuple(moves_list)  # convert back to tuple
                     tractor.movement(step[0])
-                    if (tractor.rect.x, tractor.rect.y) == destination and action == 1:
-                        tractor.collect(plant_group)
+                    if tractor.rect.x == destination[0] and tractor.rect.y == destination[1] and action(this_contain) == 1:
+                        print('expected:', expected_plant)
+                        if recognize_plants(fields, destination) == 'carrot' or 'potato' or 'wheat':
+                            tractor.collect(plant_group)
                     
                     
 
