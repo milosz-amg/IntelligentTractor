@@ -28,15 +28,6 @@ class Plant(pygame.sprite.Sprite):
             self.soil_type = "torf"
             self.fertilizer="carrot_fertilizer"
             self.pic_path="assets/Carrot.png"
-        
-        elif species=="beetroot":
-            self.growth_time=200
-            self.weight=200
-            self.min_hydration = 20
-            self.max_hydration = 60
-            self.soil_type = "piaszczyste"
-            self.fertilizer="beetroot_fertilizer"
-            self.pic_path="assets/Beetroot.png"
 
         elif species=="potato":
             self.growth_time=100

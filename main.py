@@ -10,6 +10,10 @@ from src.Field import Field
 import pickle
 import os
 from src.ID3 import make_decision
+import torch
+import cnn_model
+
+
 
 
 # pygame initialization
@@ -110,11 +114,7 @@ if __name__ == "__main__":
                     tractor.movement(step[0])
                     if (tractor.rect.x, tractor.rect.y) == destination and action == 1:
                         tractor.collect(plant_group)
-                else:
-                    tractor.rect.x = mx
-                    tractor.rect.y = my
-                    moves = goal_astar.search(
-                        [tractor.rect.x, tractor.rect.y, directions[tractor.rotation]], destination)
+                    
                     
 
         Tractor.movement_using_keys(tractor)
