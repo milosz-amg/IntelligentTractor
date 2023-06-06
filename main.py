@@ -1,7 +1,7 @@
 import pygame
 import sys
 import random
-from settings import screen_height, screen_width, SIZE, SPECIES, block_size, tile, road_coords, directions
+from settings import SIZE, directions, draw_lines_on_window
 from src.map import drawRoads, seedForFirstTime, return_fields_list, WORLD_MATRIX, get_type_by_position
 from src.Tractor import Tractor
 from src.bfs import Astar
@@ -9,7 +9,7 @@ from src.Plant import Plant
 from src.Field import Field
 import pickle
 import os
-from src.ID3 import make_decision
+from src.ID3 import action
 import torch
 import src.neural_networks as neural_networks
 
@@ -43,15 +43,13 @@ def recognize_plants(fields, destination):
     else:
         pred = 'none'
     print(pred)
-
-
+    return pred
 
 # pygame initialization
 pygame.init()
 clock = pygame.time.Clock()
-#pygame.mouse.set_visible(False)
 
-#GAME SCREEN
+# GAME SCREEN
 screen = pygame.display.set_mode(SIZE)
 pygame.display.set_caption("Traktor_interaktor")
 background = pygame.image.load("assets/farmland.jpg")
@@ -60,14 +58,7 @@ screen.fill((90,50,20))
 background.fill((90,50,20))
 background = drawRoads(background)
 
-for line in range(26):
-    pygame.draw.line(background, (0, 0, 0), (0, line * block_size), (936, line * block_size))
-    pygame.draw.line(background, (0, 0, 0), (line * block_size, 0), (line * block_size, screen_height))
-    
-pygame.draw.line(background, (0, 0, 0), (968, 285), (1336 , 285))
-pygame.draw.line(background, (0, 0, 0), (968, 649), (1336 , 649))
-pygame.draw.line(background, (0, 0, 0), (968, 285), (968, 649))
-pygame.draw.line(background, (0, 0, 0), (1336, 285), (1336, 649))
+draw_lines_on_window(background)
 
 #TRACTOR
 tractor = Tractor('oil','manual', 'fuel', 'fertilizer1', 20)
@@ -82,20 +73,18 @@ plant_group = pygame.sprite.Group()
 plant_group = seedForFirstTime()
 fields = return_fields_list()
 
-
-
 #
 tractor_move = pygame.USEREVENT + 1
 pygame.time.set_timer(tractor_move, 200)
 moves = []
 goal_astar = Astar()
-mx=random.randrange(0, 936, 36)
-my=random.randrange(0, 936, 36)
+mx = random.randrange(0, 936, 36)
+my = random.randrange(0, 936, 36)
 destination = (mx, my)
 print("Destination: ", destination)
-mx=int((mx+18)/36)
-my=int((my+18)/36)
-print("Destination: ", mx,my)
+mx = int((mx+18)/36)
+my = int((my+18)/36)
+print("Destination: ", mx, my)
 
 #ID3 TREE LOADING
 dtree = pickle.load(open(os.path.join('src','tree.plk'),'rb'))
@@ -103,25 +92,6 @@ dtree = pickle.load(open(os.path.join('src','tree.plk'),'rb'))
 # pobierz dane o polu field i czy ma na sobie roslinke, zadecyduj czy zebrac
 this_field = WORLD_MATRIX[mx][my]
 this_contain = Field.getContain(this_field)
-
-def action(this_contain):
-    if isinstance(this_contain, Plant): 
-        this_plant = this_contain
-        params=Plant.getParameters(this_plant)
-        # print(this_field)
-        #ID3 decision
-        decision=make_decision(params[0],params[1],params[2],params[3],params[4],tractor.fuel,tractor.capacity,params[5],dtree)
-        # print('wzorst',params[0],'wilgotnosc',params[1],'dni_od_nawiezienia',params[2],'pogoda',params[3],'zdrowa',params[4],'paliwo',tractor.fuel,'pojemnosc eq',tractor.capacity,'cena sprzedazy',params[5])
-        # print(decision)
-        if decision == 1:
-            print('Gotowe do zbioru')
-            return 1
-        else:
-            print('nie zbieramy')
-            return 0
-    else:
-        print('Road, no plant growing')
-        return 0
 
 
 moves = goal_astar.search(
@@ -142,7 +112,7 @@ if __name__ == "__main__":
             if event.type == pygame.KEYDOWN:
                 if event.key==pygame.K_RETURN:
                     tractor.collect(plant_group)
-                    recognize_plants(fields, destination)
+                    # recognize_plants(fields, destination)
                 if event.key == pygame.K_ESCAPE:
                     running = False
             if event.type == tractor_move:
@@ -151,11 +121,16 @@ if __name__ == "__main__":
                     step = moves_list.pop()  # pop the last element
                     moves = tuple(moves_list)  # convert back to tuple
                     tractor.movement(step[0])
-                    if tractor.rect.x == destination[0] and tractor.rect.y == destination[1] and action(this_contain) == 1:
+                    # checks if tractor is in destiantion field and make decision if it's ready to collect
+                    if tractor.rect.x == destination[0] and tractor.rect.y == destination[1] and action(this_contain, Plant, tractor, dtree) == 1:
+                        # show what should be in this field
                         print('expected:', expected_plant)
-                        if recognize_plants(fields, destination) == 'carrot' or 'potato' or 'wheat':
+                        # check if program correctly recognize plant
+                        if recognize_plants(fields, destination) == expected_plant:
+                            # if correctly  recognized than plant can be collected
                             tractor.collect(plant_group)
-                    
+                        else:
+                            print('wrong recognition')
                     
 
         Tractor.movement_using_keys(tractor)
