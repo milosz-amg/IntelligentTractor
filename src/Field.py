@@ -10,6 +10,7 @@ class Field(Sprite):
         self.y = y
         self.position = (x, y)
         self.image = image
+        self.cnn_image = image
         self.cost = cost
 
         self.hydration_level = hydration_level 

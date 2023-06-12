@@ -7,7 +7,6 @@ mx=0
 my=0
 
 
-
 class Tractor(pygame.sprite.Sprite):
     def __init__(self, engine, transmission, fuel, fertilizer, capacity):
         super().__init__()

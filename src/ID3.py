@@ -42,3 +42,22 @@ def learnTree():
 #                             #przy robaczywej == 1 daje ok czyli jak 1 to git jest mozna zbierac, ale planowalem inaczej
 # decision=make_decision(70,85,12,4,0,65,54,1500,dtree)
 # print(decision)
+
+def action(this_contain, Plant, tractor, dtree):
+    if isinstance(this_contain, Plant): 
+        this_plant = this_contain
+        params=Plant.getParameters(this_plant)
+        # print(this_field)
+        #ID3 decision
+        decision=make_decision(params[0],params[1],params[2],params[3],params[4],tractor.fuel,tractor.capacity,params[5],dtree)
+        # print('wzorst',params[0],'wilgotnosc',params[1],'dni_od_nawiezienia',params[2],'pogoda',params[3],'zdrowa',params[4],'paliwo',tractor.fuel,'pojemnosc eq',tractor.capacity,'cena sprzedazy',params[5])
+        # print(decision)
+        if decision == 1:
+            print('Gotowe do zbioru')
+            return 1
+        else:
+            print('nie zbieramy')
+            return 0
+    else:
+        print('Road, no plant growing')
+        return 0
