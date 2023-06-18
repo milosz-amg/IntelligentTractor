@@ -1,6 +1,11 @@
 from cmath import sqrt
 import pygame
+import pickle
 
+def load_matrix(filename):
+    with open(filename, 'rb') as file:
+        matrix = pickle.load(file)
+    return matrix
 
 screen_width = 1368
 screen_height = 936
@@ -18,6 +23,7 @@ field_width = 4
 field_height = 4
 field_size = field_width*field_height
 fields_amount = 25
+matrix_plants_type = load_matrix("genetic_algorithm_matrix.pkl")
 
 directions = {0: 'UP', 90: 'RIGHT', 180: 'DOWN', 270: 'LEFT'}
 
@@ -30,3 +36,5 @@ def draw_lines_on_window(background):
     pygame.draw.line(background, (0, 0, 0), (968, 649), (1336 , 649))
     pygame.draw.line(background, (0, 0, 0), (968, 285), (968, 649))
     pygame.draw.line(background, (0, 0, 0), (1336, 285), (1336, 649))
+
+

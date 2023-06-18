@@ -1,7 +1,7 @@
 import pygame
 import sys
 import random
-from settings import SIZE, directions, draw_lines_on_window
+from settings import SIZE, directions, draw_lines_on_window, matrix_plants_type
 from src.map import drawRoads, seedForFirstTime, return_fields_list, WORLD_MATRIX, get_type_by_position
 from src.Tractor import Tractor
 from src.bfs import Astar
@@ -44,6 +44,7 @@ def recognize_plants(fields, destination):
         pred = 'none'
     print(pred)
     return pred
+
 
 # pygame initialization
 pygame.init()

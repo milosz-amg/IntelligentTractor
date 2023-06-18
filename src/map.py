@@ -1,6 +1,6 @@
 from cmath import sqrt
 import pygame
-from settings import screen_height, screen_width, SIZE, SPECIES, block_size, tile, road_coords, fields_amount, field_size, field_height, field_width
+from settings import screen_height, screen_width, SIZE, SPECIES, block_size, tile, road_coords, fields_amount, field_size, field_height, field_width, matrix_plants_type
 from src.Plant import Plant
 import random
 from src.Field import Field
@@ -60,9 +60,11 @@ def drawRoads(screen):
     return screen
 
 def seedForFirstTime():
+    plants_type = matrix_plants_type
+    
     plant_group = pygame.sprite.Group()
     for field in range(fields_amount):
-        plant_name = random.choice(SPECIES)
+        plant_name = matrix_plants_type[field]
         blocks_seeded_in_field = 0
         while (blocks_seeded_in_field < field_size):
 
